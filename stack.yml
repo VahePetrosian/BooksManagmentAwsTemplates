@@ -1,0 +1,102 @@
+Resources:
+  BooksApiInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-07df274a488ca9195
+      InstanceType: t2.micro
+      KeyName: aws-key2
+      SecurityGroups:
+        - !Ref ApiInstanceSecurityGroup
+      UserData: !Base64 |
+        #!/bin/bash
+        sudo yum update -y
+        sudo yum install docker -y
+        sudo service docker start
+        sudo usermod -a -G docker ec2-user
+        sudo mkdir -p /etc/systemd/system/docker.service.d
+        printf "[Service]\nExecStart=\nExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375\n" | sudo tee /etc/systemd/system/docker.service.d/docker.conf
+        sudo systemctl daemon-reload
+        sudo systemctl restart docker
+
+  ApiInstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP/SSH/PING
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: icmp
+        FromPort: 8
+        ToPort: -1
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: '2375'
+        ToPort: '2375'
+        CidrIp: 0.0.0.0/0
+
+  # BooksTable:
+  #   Type: AWS::DynamoDB::Table
+  #   Properties:
+  #     TableName: Books
+  #     AttributeDefinitions:
+  #       - AttributeName: "ISBN"
+  #         AttributeType: "S"
+  #     KeySchema:
+  #       - AttributeName: "ISBN"
+  #         KeyType: "HASH"
+  #     ProvisionedThroughput:
+  #       ReadCapacityUnits: 5
+  #       WriteCapacityUnits: 5
+
+  # LambdaExecutionRole:
+  #   Type: AWS::IAM::Role
+  #   Properties:
+  #     AssumeRolePolicyDocument:
+  #       Version: '2012-10-17'
+  #       Statement:
+  #       - Effect: Allow
+  #         Principal:
+  #           Service:
+  #           - lambda.amazonaws.com
+  #         Action:
+  #         - sts:AssumeRole
+  #     Path: "/"
+  #     Policies:
+  #     - PolicyName: root
+  #       PolicyDocument:
+  #         Version: '2012-10-17'
+  #         Statement:
+  #         - Effect: Allow
+  #           Action:
+  #           - logs:*
+  #           Resource: arn:aws:logs:*:*:*
+
+  # SqsChangeLambdaCodeBucket:
+  #   Type: AWS::S3::Bucket
+  #   Properties: 
+  #     BucketName: db-change-log-function-bucket
+  
+  # DbChangeLogFunction:
+  #   Type: AWS::Lambda::Function
+  #   Properties:
+  #     Role: !GetAtt LambdaExecutionRole.Arn
+  #     Runtime: dotnetcore3.1
+  #     Handler: index.handler
+  #     Code:
+  #       S3Bucket: db-change-log-function-bucket
+  #       S3Key: function.zip
+  #     Timeout: 5
+
+  # DbChangeLogBucket:
+  #   Type: AWS::S3::Bucket
+  #   Properties: 
+  #     BucketName: db-change-log-bucket
+
+  # MainQueue:
+  #   Type: AWS::SQS::Queue
