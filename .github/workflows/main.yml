@@ -19,4 +19,4 @@ jobs:
 
       - name: Deploy stack
         run: |
-          aws cloudformation create-stack --stack-name dev-stage1 --template-body stack.yml --region eu-central-1
+          aws cloudformation create-stack --stack-name dev-stage1 --template-body file://stack.yml --region eu-central-1
