@@ -17,6 +17,16 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
 
-      - name: Deploy stack
-        run: |
-          aws cloudformation create-stack --stack-name dev-stage1 --template-body file://stack.yml --region eu-central-1
+      - name: Deploy to AWS CloudFormation
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: EC2
+          template: templates/ec2Instance.yml
+          no-fail-on-empty-changeset: "1"
+
+      - name: Deploy to AWS CloudFormation
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: LambdaCodeBucket
+          template: templates/lambdaBucket.yml
+          no-fail-on-empty-changeset: "1"
