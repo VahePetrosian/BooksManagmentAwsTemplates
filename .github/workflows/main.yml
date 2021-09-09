@@ -20,13 +20,6 @@ jobs:
       - name: Deploy to AWS CloudFormation
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: EC2s
-          template: templates/ec2Instance.yml
-          no-fail-on-empty-changeset: "1"
-
-      - name: Deploy to AWS CloudFormation
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
-        with:
-          name: Buckets
-          template: templates/lambdaBucket.yml
+          name: booksStack
+          template: templates/booksStack.yml
           no-fail-on-empty-changeset: "1"
