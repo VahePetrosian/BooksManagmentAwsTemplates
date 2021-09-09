@@ -1,0 +1,88 @@
+Resources:
+  BooksApiInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-07df274a488ca9195
+      InstanceType: t2.micro
+      KeyName: aws-key2
+      SecurityGroups:
+        - !Ref ApiInstanceSecurityGroup
+      UserData: !Base64 |
+        #!/bin/bash
+        sudo yum update -y
+        sudo yum install docker -y
+        sudo service docker start
+
+  ApiInstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP/SSH
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+
+  BooksTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Books
+      AttributeDefinitions:
+        - AttributeName: "ISBN"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "ISBN"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  LambdaCode:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: lambda-bucket-books-v-luigf
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: lambda-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: root
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:*
+            Resource: arn:aws:logs:*:*:*
+
+#  Lambda:
+#    Type: AWS::Lambda::Function
+#    Properties:
+#      Role: !GetAtt LambdaRole.Arn
+#      Runtime: dotnetcore3.1
+#      Handler: index.handler
+#      Code:
+#        S3Bucket: !Ref 'LambdaCode'
+#        S3Key: function.zip
+#      Timeout: 5
+
+  ChangeLog:
+    Type: AWS::S3::Bucket
+
+  Queue:
+    Type: AWS::SQS::Queue

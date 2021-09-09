@@ -1,3 +1,0 @@
-Resources:
-  LambdaCode:
-    Type: AWS::S3::Bucket
