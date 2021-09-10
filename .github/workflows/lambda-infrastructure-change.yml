@@ -1,4 +1,4 @@
-name: CloudFormation Lambda Infrastructure
+name: Lambda Infrastructure Change
 
 on:
   workflow_dispatch:
@@ -19,7 +19,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
           
-      - name: Deploy Lambda Infrastructure
+      - name: Create Change Set
         run: |
           aws cloudformation create-change-set --stack-name dev-stage --change-set-name lambda-infrastructure-change --region eu-central-1 --template-body file://templates/lambda-infrastructure.yml --capabilities CAPABILITY_NAMED_IAM
-          aws cloudformation execute-change-set --stack-name dev-stage --change-set-name lambda-infrastructure-change --region eu-central-1
+         
+      - name: Execute Change Set
+        run: |
+         aws cloudformation execute-change-set --stack-name dev-stage --change-set-name lambda-infrastructure-change --region eu-central-1
