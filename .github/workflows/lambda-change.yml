@@ -1,0 +1,33 @@
+name: Lambda Change
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'templates/lambda.yml'
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code from master branch
+        uses: actions/checkout@v2
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+          
+      - name: Create Change Set
+        run: |
+          aws cloudformation create-change-set --stack-name dev-stage --change-set-name lambda-change --region eu-central-1 --template-body file://templates/lambda.yml
+         
+      - name: Sleep 5 seconds
+        uses: whatnick/wait-action@master
+        with:
+          time: '5s'
+         
+      - name: Execute Change Set
+        run: |
+         aws cloudformation execute-change-set --stack-name dev-stage --change-set-name lambda-change --region eu-central-1
