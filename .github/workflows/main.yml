@@ -19,4 +19,9 @@ jobs:
           
       - name: Deploy stack
         run: |
-          aws cloudformation create-stack --stack-name dev-stage1 --template-body file://templates/booksStack.yml --region eu-central-1 --capabilities CAPABILITY_NAMED_IAM
+          aws cloudformation update-stack --stack-name dev-stage --template-body file://templates/lambda-infrastructure.yml --region eu-central-1 --capabilities CAPABILITY_NAMED_IAM
+          #aws cloudformation update-stack --stack-name dev-stage --template-body file://templates/lambda.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage --template-body file://templates/db-instance.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage --template-body file://templates/api-instance.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage --template-body file://templates/queue.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage --template-body file://templates/log-bucket.yml --region eu-central-1
