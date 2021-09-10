@@ -21,4 +21,4 @@ jobs:
           
       - name: Update Lambda
         run: |
-          aws cloudformation update-stack --stack-name dev-stage-db-instance --template-body file://templates/lambda.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage-lambda --template-body file://templates/lambda.yml --region eu-central-1
