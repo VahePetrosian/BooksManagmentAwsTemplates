@@ -1,0 +1,11 @@
+Resources:  
+  Lambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Role: !GetAtt LambdaRole.Arn
+      Runtime: dotnetcore3.1
+      Handler: index.handler
+      Code:
+        S3Bucket: !Ref 'LambdaCode'
+        S3Key: function.zip
+      Timeout: 5
