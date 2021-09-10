@@ -23,6 +23,11 @@ jobs:
         run: |
           aws cloudformation create-change-set --stack-name dev-stage --change-set-name lambda-infrastructure-change --region eu-central-1 --template-body file://templates/lambda-infrastructure.yml --capabilities CAPABILITY_NAMED_IAM
          
+      - name: Sleep 5 seconds
+        uses: whatnick/wait-action@master
+        with:
+          time: '5s'
+         
       - name: Execute Change Set
         run: |
          aws cloudformation execute-change-set --stack-name dev-stage --change-set-name lambda-infrastructure-change --region eu-central-1
