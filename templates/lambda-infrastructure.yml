@@ -2,7 +2,7 @@ Resources:
   LambdaCode:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: lambda-bucket-books-v-luigfsd
+      BucketName: lambda-bucket-books-v-luigfsddasf
 
   LambdaRole:
     Type: AWS::IAM::Role
