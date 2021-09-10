@@ -1,4 +1,9 @@
 Resources:
+  ContainerRepository: 
+    Type: AWS::ECR::Repository
+    Properties: 
+      RepositoryName: "container-repository"
+  
   BooksApiInstance:
     Type: AWS::EC2::Instance
     Properties:
