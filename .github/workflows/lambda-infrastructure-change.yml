@@ -21,4 +21,5 @@ jobs:
           
       - name: Deploy Lambda Infrastructure
         run: |
-          aws cloudformation update-stack --stack-name dev-stage --template-body file://templates/lambda-infrastructure.yml --region eu-central-1 --capabilities CAPABILITY_NAMED_IAM
+          aws cloudformation create-change-set --stack-name dev-stage --change-set-name lambda-infrastructure-change --region eu-central-1 --template-body file://templates/lambda-infrastructure.yml --capabilities CAPABILITY_NAMED_IAM
+          aws cloudformation execute-change-set --stack-name dev-stage --change-set-name lambda-infrastructure-change --region eu-central-1
