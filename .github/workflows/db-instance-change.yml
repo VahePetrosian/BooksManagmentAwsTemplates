@@ -1,10 +1,10 @@
-name: Lambda Infrastructure Change
+name: Db Instance Change
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - 'templates/lambda-infrastructure.yml'
+      - 'templates/db-instance.yml'
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -19,6 +19,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
           
-      - name: Update Lambda Infrastructure
+      - name: Update Db Instance
         run: |
-          aws cloudformation update-stack --stack-name dev-stage-lambda-infrastructure --template-body file://templates/lambda-infrastructure.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage-db-instance --template-body file://templates/db-instance.yml --region eu-central-1
