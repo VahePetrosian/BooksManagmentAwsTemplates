@@ -1,3 +1,5 @@
 Resources:
   Queue:
     Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: "sqs-queue-luigfsddasf"
