@@ -19,7 +19,7 @@ Resources:
           - sts:AssumeRole
       Path: "/"
       Policies:
-      - PolicyName: allowLambdaLogs
+      - PolicyName: root
         PolicyDocument:
           Version: '2012-10-17'
           Statement:
@@ -27,14 +27,3 @@ Resources:
             Action:
             - logs:*
             Resource: arn:aws:logs:*:*:*
-      - PolicyName: allowSqs
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-          - Effect: Allow
-            Action:
-            - sqs:ReceiveMessage
-            - sqs:DeleteMessage
-            - sqs:GetQueueAttributes
-            - sqs:ChangeMessageVisibility
-            Resource: !GetAtt MyQueue.Arn
