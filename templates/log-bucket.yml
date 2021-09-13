@@ -1,3 +1,5 @@
 Resources:
   ChangeLog:
     Type: AWS::S3::Bucket
+    Properties:
+      BucketName: log-bucket-books-v-luigfsddasf
