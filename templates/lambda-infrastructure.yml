@@ -17,13 +17,43 @@ Resources:
             - lambda.amazonaws.com
           Action:
           - sts:AssumeRole
-      Path: "/"
       Policies:
-      - PolicyName: root
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-          - Effect: Allow
-            Action:
-            - logs:*
-            Resource: arn:aws:logs:*:*:*
+        - PolicyName: allowLambdaLogs
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - logs:*
+              Resource: arn:aws:logs:*:*:*
+        - PolicyName: allowSqs
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - sqs:ReceiveMessage
+              - sqs:DeleteMessage
+              - sqs:GetQueueAttributes
+              - sqs:ChangeMessageVisibility
+              Resource: arn:aws:sqs:*:*:*
+        - PolicyName: allowS3
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - sqs:PutObject
+              - sqs:PutObjectAcl
+              - sqs:PutObjectTagging
+              - sqs:PutObjectVersionAcl
+              - sqs:PutObjectVersionTagging
+              Resource: arn:aws:s3:::log-bucket-books-v-luigfsddasf
+
+  LambdaFunctionEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 1
+      Enabled: true
+      EventSourceArn: arn:aws:sqs:eu-central-1:554236477482:sqs-queue-luigfsddasf
+      FunctionName: sqsChangeLambda
