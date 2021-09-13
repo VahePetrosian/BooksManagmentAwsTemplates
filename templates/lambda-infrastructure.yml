@@ -43,12 +43,12 @@ Resources:
             Statement:
             - Effect: Allow
               Action:
-              - sqs:PutObject
-              - sqs:PutObjectAcl
-              - sqs:PutObjectTagging
-              - sqs:PutObjectVersionAcl
-              - sqs:PutObjectVersionTagging
-              Resource: arn:aws:s3:::log-bucket-books-v-luigfsddasf
+              - s3:PutObject
+              - s3:PutObjectAcl
+              - s3:PutObjectTagging
+              - s3:PutObjectVersionAcl
+              - s3:PutObjectVersionTagging
+              Resource: arn:aws:s3:::*
 
   LambdaFunctionEventSourceMapping:
     Type: AWS::Lambda::EventSourceMapping
