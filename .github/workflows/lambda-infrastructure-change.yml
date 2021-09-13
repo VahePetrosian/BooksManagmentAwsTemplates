@@ -21,4 +21,4 @@ jobs:
           
       - name: Update Lambda Infrastructure
         run: |
-          aws cloudformation update-stack --stack-name dev-stage-lambda-infrastructure --template-body file://templates/lambda-infrastructure.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage-lambda-infrastructure --template-body file://templates/lambda-infrastructure.yml --region eu-central-1 --capabilities CAPABILITY_NAMED_IAM
