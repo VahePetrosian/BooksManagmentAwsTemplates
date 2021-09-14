@@ -1,22 +1,41 @@
 Resources:
-  ContainerRepository: 
-    Type: AWS::ECR::Repository
-    Properties: 
-      RepositoryName: "container-repository"
-
-  BooksApiInstance:
-    Type: AWS::EC2::Instance
+  EC2Role:
+    Type: AWS::IAM::Role
     Properties:
-      ImageId: ami-07df274a488ca9195
-      InstanceType: t2.micro
-      KeyName: aws-key2
-      SecurityGroups:
-        - !Ref ApiInstanceSecurityGroup
-      UserData: !Base64 |
-        #!/bin/bash
-        sudo yum update -y
-        sudo yum install docker -y
-        sudo service docker start
+      RoleName: ec2-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+        - PolicyName: allowSqs
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - sqs:*
+              Resource: arn:aws:sqs:*:*:*
+        - PolicyName: allowDynamoDb
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - dynamodb:*
+              Resource: arn:aws:dynamodb:*:*:*
+
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties: 
+      InstanceProfileName: ec2-instance-profile
+      Path: "/"
+      Roles: [!Ref EC2Role]
 
   ApiInstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -31,3 +50,18 @@ Resources:
         FromPort: 80
         ToPort: 80
         CidrIp: 0.0.0.0/0
+
+  BooksApiInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-07df274a488ca9195
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      InstanceType: t2.micro
+      KeyName: aws-key2
+      SecurityGroups:
+        - !Ref ApiInstanceSecurityGroup
+      UserData: !Base64 |
+        #!/bin/bash
+        sudo yum update -y
+        sudo yum install docker -y
+        sudo service docker start
