@@ -21,4 +21,4 @@ jobs:
           
       - name: Update Api Instance
         run: |
-          aws cloudformation update-stack --stack-name dev-stage-api-instance --template-body file://templates/api-instance.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage-api-instance --template-body file://templates/api-instance.yml --region eu-central-1 --capabilities CAPABILITY_NAMED_IAM
