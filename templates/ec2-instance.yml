@@ -17,7 +17,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-07df274a488ca9195
-      IamInstanceProfile: !Ref EC2InstanceProfile
+      IamInstanceProfile: "EC2InstanceProfile"
       InstanceType: t2.micro
       KeyName: aws-key2
       SecurityGroups:
