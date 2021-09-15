@@ -19,7 +19,11 @@ jobs:
       - name: Create Stacks
         run: |
           aws cloudformation create-stack --stack-name dev-stage-iam-roles --template-body file://templates/iam-roles.yml --capabilities CAPABILITY_NAMED_IAM
+          aws cloudformation wait stack-create-complete --stack-name dev-stage-iam-roles
+
           aws cloudformation create-stack --stack-name dev-stage-sqs-instance --template-body file://templates/sqs-instance.yml
+          aws cloudformation wait stack-create-complete --stack-name dev-stage-sqs-instance
+
           aws cloudformation create-stack --stack-name dev-stage-db-instance --template-body file://templates/db-instance.yml
           aws cloudformation create-stack --stack-name dev-stage-ec2-instance --template-body file://templates/ec2-instance.yml
           aws cloudformation create-stack --stack-name dev-stage-event-log-bucket --template-body file://templates/event-log-bucket.yml
