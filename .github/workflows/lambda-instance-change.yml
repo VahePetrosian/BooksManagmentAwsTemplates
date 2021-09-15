@@ -1,10 +1,10 @@
-name: Queue Change
+name: Lambda Instance Change
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - 'templates/queue.yml'
+      - 'templates/lambda-instance.yml'
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -19,6 +19,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
           
-      - name: Update Queue
+      - name: Lambda Instance Change
         run: |
-          aws cloudformation update-stack --stack-name dev-stage-queue --template-body file://templates/queue.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage-lambda-instance --template-body file://templates/lambda-instance.yml --region eu-central-1

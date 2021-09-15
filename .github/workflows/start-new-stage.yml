@@ -1,4 +1,4 @@
-name: Start New Stage
+name: Start Stage
 
 on:
   workflow_dispatch:
@@ -16,11 +16,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
           
-      - name: Update Lambda
+      - name: Create Stacks
         run: |
-          aws cloudformation create-stack --stack-name dev-stage-lambda-infrastructure --template-body file://templates/lambda-infrastructure.yml --region eu-central-1 --capabilities CAPABILITY_NAMED_IAM
-          #aws cloudformation create-stack --stack-name dev-stage-lambda --template-body file://templates/lambda.yml --region eu-central-1
-          aws cloudformation create-stack --stack-name dev-stage-db-instance --template-body file://templates/db-instance.yml --region eu-central-1
-          aws cloudformation create-stack --stack-name dev-stage-api-instance --template-body file://templates/api-instance.yml --region eu-central-1 --capabilities CAPABILITY_NAMED_IAM
-          aws cloudformation create-stack --stack-name dev-stage-queue --template-body file://templates/queue.yml --region eu-central-1
-          aws cloudformation create-stack --stack-name dev-stage-log-bucket --template-body file://templates/log-bucket.yml --region eu-central-1
+          aws cloudformation create-stack --stack-name dev-stage-iam-roles --template-body file://templates/iam-roles.yml --capabilities CAPABILITY_NAMED_IAM
+          aws cloudformation create-stack --stack-name dev-stage-sqs-instance --template-body file://templates/sqs-instance.yml
+          aws cloudformation create-stack --stack-name dev-stage-db-instance --template-body file://templates/db-instance.yml
+          aws cloudformation create-stack --stack-name dev-stage-ec2-instance --template-body file://templates/ec2-instance.yml
+          aws cloudformation create-stack --stack-name dev-stage-event-log-bucket --template-body file://templates/event-log-bucket.yml
+          aws cloudformation create-stack --stack-name dev-stage-lambda-code-bucket --template-body file://templates/lambda-code-bucket.yml
+          aws cloudformation create-stack --stack-name dev-stage-lambda-instance --template-body file://templates/lambda-instance.yml
+
+          

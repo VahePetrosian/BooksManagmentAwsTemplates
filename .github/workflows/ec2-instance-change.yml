@@ -1,10 +1,10 @@
-name: Lambda Change
+name: Ec2 Instance Change
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - 'templates/lambda.yml'
+      - 'templates/ec2-instance.yml'
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -19,6 +19,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
           
-      - name: Update Lambda
+      - name: Update EC2 Instance
         run: |
-          aws cloudformation update-stack --stack-name dev-stage-lambda --template-body file://templates/lambda.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage-ec2-instance --template-body file://templates/ec2-instance.yml --region eu-central-1
