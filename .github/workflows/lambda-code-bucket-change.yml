@@ -21,4 +21,4 @@ jobs:
           
       - name: Update Lambda Code Bucket
         run: |
-          aws cloudformation update-stack --stack-name dev-stage-lambda-code-bucket --template-body file://templates/lambda-code-bucket.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage-lambda-code-bucket --template-body file://templates/lambda-code-bucket.yml

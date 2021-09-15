@@ -21,4 +21,4 @@ jobs:
           
       - name: Update EC2 Instance
         run: |
-          aws cloudformation update-stack --stack-name dev-stage-ec2-instance --template-body file://templates/ec2-instance.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage-ec2-instance --template-body file://templates/ec2-instance.yml

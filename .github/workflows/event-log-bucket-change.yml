@@ -21,4 +21,4 @@ jobs:
           
       - name: Update Event Log Bucket
         run: |
-          aws cloudformation update-stack --stack-name dev-stage-event-log-bucket --template-body file://templates/event-log-bucket.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage-event-log-bucket --template-body file://templates/event-log-bucket.yml

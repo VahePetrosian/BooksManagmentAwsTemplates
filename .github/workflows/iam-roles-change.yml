@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'templates/iam-roles-change.yml'
+      - 'templates/iam-roles.yml'
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,4 +21,4 @@ jobs:
           
       - name: Update IAM Roles
         run: |
-          aws cloudformation update-stack --stack-name dev-stage-iam-roles --template-body file://templates/iam-roles.yml --region eu-central-1 --capabilities CAPABILITY_NAMED_IAM
+          aws cloudformation update-stack --stack-name dev-stage-iam-roles --template-body file://templates/iam-roles.yml --capabilities CAPABILITY_NAMED_IAM

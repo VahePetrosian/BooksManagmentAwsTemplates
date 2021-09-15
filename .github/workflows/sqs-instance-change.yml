@@ -21,4 +21,4 @@ jobs:
           
       - name: SQS Instance Change
         run: |
-          aws cloudformation update-stack --stack-name dev-stage-sqs-instance --template-body file://templates/sqs-instance.yml --region eu-central-1
+          aws cloudformation update-stack --stack-name dev-stage-sqs-instance --template-body file://templates/sqs-instance.yml
