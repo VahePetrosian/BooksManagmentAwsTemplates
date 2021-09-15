@@ -1,0 +1,19 @@
+Resources:
+  #Lambda:
+  #  Type: AWS::Lambda::Function
+  #  Properties:
+  #    Role: !GetAtt LambdaRole.Arn
+  #    Runtime: dotnetcore3.1
+  #    Handler: index.handler
+  #    Code:
+  #      S3Bucket: !Ref 'LambdaCode'
+  #      S3Key: function.zip
+  #    Timeout: 5
+
+  LambdaFunctionEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 1
+      Enabled: true
+      EventSourceArn: arn:aws:sqs:eu-central-1:554236477482:sqs-queue-luigfsddasf
+      FunctionName: sqsChangeLambda

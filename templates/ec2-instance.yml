@@ -1,0 +1,29 @@
+Resources:
+  ApiInstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP/SSH
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+
+  BooksApiInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-07df274a488ca9195
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      InstanceType: t2.micro
+      KeyName: aws-key2
+      SecurityGroups:
+        - !Ref ApiInstanceSecurityGroup
+      UserData: !Base64 |
+        #!/bin/bash
+        sudo yum update -y
+        sudo yum install docker -y
+        sudo service docker start

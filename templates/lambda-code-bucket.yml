@@ -1,0 +1,5 @@
+Resources:
+  LambdaCode:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: lambda-bucket-books-v-luigfsddasf

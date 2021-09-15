@@ -1,8 +1,41 @@
 Resources:
-  LambdaCode:
-    Type: AWS::S3::Bucket
+  EC2Role:
+    Type: AWS::IAM::Role
     Properties:
-      BucketName: lambda-bucket-books-v-luigfsddasf
+      RoleName: ec2-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+        - PolicyName: allowSqs
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - sqs:*
+              Resource: arn:aws:sqs:*:*:*
+        - PolicyName: allowDynamoDb
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Action:
+              - dynamodb:*
+              Resource: arn:aws:dynamodb:*:*:*
+
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties: 
+      InstanceProfileName: ec2-instance-profile
+      Path: "/"
+      Roles: [!Ref EC2Role]
 
   LambdaRole:
     Type: AWS::IAM::Role
@@ -18,14 +51,6 @@ Resources:
           Action:
           - sts:AssumeRole
       Policies:
-        - PolicyName: allowLambdaLogs
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-            - Effect: Allow
-              Action:
-              - logs:*
-              Resource: arn:aws:logs:*:*:*
         - PolicyName: allowSqs
           PolicyDocument:
             Version: '2012-10-17'
@@ -49,11 +74,3 @@ Resources:
               - s3:PutObjectVersionAcl
               - s3:PutObjectVersionTagging
               Resource: arn:aws:s3:::*
-
-  LambdaFunctionEventSourceMapping:
-    Type: AWS::Lambda::EventSourceMapping
-    Properties:
-      BatchSize: 1
-      Enabled: true
-      EventSourceArn: arn:aws:sqs:eu-central-1:554236477482:sqs-queue-luigfsddasf
-      FunctionName: sqsChangeLambda
