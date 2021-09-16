@@ -1,6 +1,4 @@
-.
-!.gitattributes
-!.gitignore
-!readme.md
-!.gitkeep
-!.yml
+*
+!*/
+!*.yml
+!*.gitignore
