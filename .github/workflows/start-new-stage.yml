@@ -16,7 +16,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
           
-      
+      - name: Running Lambda Deployment
+      - uses: convictional/trigger-workflow-and-wait@v1.3.0
+        with:
+          owner: VahePetrosian
+          repo: BooksManagmentLambda
+          github_token: ${{ secrets.PAT_TOKEN }}
+          workflow_file_name: main.yml
 
       - name: Run Lambda Repository Workflow
         env:
@@ -26,7 +32,6 @@ jobs:
 
       - name: Create Lambda Infrastructure
         run: |
-
           aws cloudformation create-stack --stack-name dev-stage-lambda-instance --template-body file://templates/lambda-instance.yml
           aws cloudformation wait stack-create-complete --stack-name dev-stage-lambda-instance
-          
+
