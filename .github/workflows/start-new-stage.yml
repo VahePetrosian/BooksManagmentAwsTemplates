@@ -16,31 +16,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
           
-      - name: Create Stacks
-        run: |
-          aws cloudformation create-stack --stack-name dev-stage-iam-roles --template-body file://templates/iam-roles.yml --capabilities CAPABILITY_NAMED_IAM
-          aws cloudformation wait stack-create-complete --stack-name dev-stage-iam-roles
-
-          aws cloudformation create-stack --stack-name dev-stage-sqs-instance --template-body file://templates/sqs-instance.yml
-          aws cloudformation wait stack-create-complete --stack-name dev-stage-sqs-instance
-
-          aws cloudformation create-stack --stack-name dev-stage-db-instance --template-body file://templates/db-instance.yml
-          aws cloudformation wait stack-create-complete --stack-name dev-stage-db-instance
-
-          aws cloudformation create-stack --stack-name dev-stage-ec2-instance --template-body file://templates/ec2-instance.yml
-          aws cloudformation wait stack-create-complete --stack-name dev-stage-ec2-instance
-
-          aws cloudformation create-stack --stack-name dev-stage-event-log-bucket --template-body file://templates/event-log-bucket.yml
-          aws cloudformation wait stack-create-complete --stack-name dev-stage-event-log-bucket
-
-          aws cloudformation create-stack --stack-name dev-stage-lambda-code-bucket --template-body file://templates/lambda-code-bucket.yml
-          aws cloudformation wait stack-create-complete --stack-name dev-stage-lambda-code-bucket
+      
 
       - name: Run Lambda Repository Workflow
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          gh api repos/:VahePetrosian/ghidra-ci/dispatches --raw-field event_type=template-start-trigger
+          gh api repos/:VahePetrosian/BooksManagmentLambda/dispatches --raw-field event_type=template-start-trigger
 
       - name: Create Lambda Infrastructure
         run: |
