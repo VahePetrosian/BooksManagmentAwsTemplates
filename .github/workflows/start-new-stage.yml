@@ -16,6 +16,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
           
+      - name: Create Stacks
+        run: |
+          aws cloudformation create-stack --stack-name dev-stage-iam-roles --template-body file://templates/iam-roles.yml --capabilities CAPABILITY_NAMED_IAM
+          aws cloudformation wait stack-create-complete --stack-name dev-stage-iam-roles
+
+          aws cloudformation create-stack --stack-name dev-stage-sqs-instance --template-body file://templates/sqs-instance.yml
+          aws cloudformation create-stack --stack-name dev-stage-lambda-code-bucket --template-body file://templates/lambda-code-bucket.yml
+          aws cloudformation create-stack --stack-name dev-stage-db-instance --template-body file://templates/db-instance.yml
+          aws cloudformation create-stack --stack-name dev-stage-ec2-instance --template-body file://templates/ec2-instance.yml
+          aws cloudformation create-stack --stack-name dev-stage-event-log-bucket --template-body file://templates/event-log-bucket.yml
+          
+          aws cloudformation wait stack-create-complete --stack-name dev-stage-sqs-instance
+          aws cloudformation wait stack-create-complete --stack-name dev-stage-lambda-code-bucket
+
       - name: Running Lambda Deployment
         uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
@@ -24,14 +38,15 @@ jobs:
           github_token: ${{ secrets.PAT_TOKEN }}
           workflow_file_name: main.yml
 
-      - name: Run Lambda Repository Workflow
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
-        run: |
-          gh api repos/:VahePetrosian/BooksManagmentLambda/dispatches --raw-field event_type=template-start-trigger
-
       - name: Create Lambda Infrastructure
         run: |
           aws cloudformation create-stack --stack-name dev-stage-lambda-instance --template-body file://templates/lambda-instance.yml
           aws cloudformation wait stack-create-complete --stack-name dev-stage-lambda-instance
 
+      - name: Running API Deployment
+        uses: convictional/trigger-workflow-and-wait@v1.3.0
+        with:
+          owner: VahePetrosian
+          repo: BooksManagmentApi
+          github_token: ${{ secrets.PAT_TOKEN }}
+          workflow_file_name: deploy.yml
