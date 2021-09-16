@@ -17,7 +17,7 @@ jobs:
           aws-region: eu-central-1
           
       - name: Running Lambda Deployment
-      - uses: convictional/trigger-workflow-and-wait@v1.3.0
+        uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
           owner: VahePetrosian
           repo: BooksManagmentLambda
