@@ -25,9 +25,26 @@ jobs:
           aws cloudformation wait stack-create-complete --stack-name dev-stage-sqs-instance
 
           aws cloudformation create-stack --stack-name dev-stage-db-instance --template-body file://templates/db-instance.yml
-          aws cloudformation create-stack --stack-name dev-stage-ec2-instance --template-body file://templates/ec2-instance.yml
-          aws cloudformation create-stack --stack-name dev-stage-event-log-bucket --template-body file://templates/event-log-bucket.yml
-          aws cloudformation create-stack --stack-name dev-stage-lambda-code-bucket --template-body file://templates/lambda-code-bucket.yml
-          aws cloudformation create-stack --stack-name dev-stage-lambda-instance --template-body file://templates/lambda-instance.yml
+          aws cloudformation wait stack-create-complete --stack-name dev-stage-db-instance
 
+          aws cloudformation create-stack --stack-name dev-stage-ec2-instance --template-body file://templates/ec2-instance.yml
+          aws cloudformation wait stack-create-complete --stack-name dev-stage-ec2-instance
+
+          aws cloudformation create-stack --stack-name dev-stage-event-log-bucket --template-body file://templates/event-log-bucket.yml
+          aws cloudformation wait stack-create-complete --stack-name dev-stage-event-log-bucket
+
+          aws cloudformation create-stack --stack-name dev-stage-lambda-code-bucket --template-body file://templates/lambda-code-bucket.yml
+          aws cloudformation wait stack-create-complete --stack-name dev-stage-lambda-code-bucket
+
+      - name: Run Lambda Repository Workflow
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          gh api repos/:VahePetrosian/ghidra-ci/dispatches --raw-field event_type=template-start-trigger
+
+      - name: Create Lambda Infrastructure
+        run: |
+
+          aws cloudformation create-stack --stack-name dev-stage-lambda-instance --template-body file://templates/lambda-instance.yml
+          aws cloudformation wait stack-create-complete --stack-name dev-stage-lambda-instance
           
